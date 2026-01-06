@@ -25,7 +25,11 @@ enum class eRMdlSubVersion : char
 	VERSION_13,
 	VERSION_14,
 	VERSION_15,
-	VERSION_16
+	VERSION_16,
+	VERSION_17,
+	VERSION_18,
+	VERSION_19,
+	VERSION_19_1
 };
 
 // conversion to rmdl v10 (studio version 54)
@@ -36,12 +40,23 @@ void ConvertRMDL8To10(char* pMDL, const std::string& pathIn, const std::string& 
 
 void ConvertRMDL120To10(char* pMDL, const size_t fileSize, const std::string& pathIn, const std::string& pathOut);
 void ConvertRMDL121To10(char* pMDL, const std::string& pathIn, const std::string& pathOut);
+void ConvertRMDL122To10(char* pMDL, const std::string& pathIn, const std::string& pathOut);
+// v12.3 uses same structure as v12.2 (only animation format changed) - use ConvertRMDL122To10
+void ConvertRMDL124To10(char* pMDL, const std::string& pathIn, const std::string& pathOut);
+void ConvertRMDL125To10(char* pMDL, const std::string& pathIn, const std::string& pathOut);
+void ConvertRMDL160To10(char* pMDL, const size_t fileSize, const std::string& pathIn, const std::string& pathOut, int subversion = 16);
+void ConvertRMDL191To10(char* pMDL, const size_t fileSize, const std::string& pathIn, const std::string& pathOut);
 
 // conversion to mdl v53
 void ConvertMDL52To53(char* pMDL, const std::string& pathIn, const std::string& pathOut);
 
 // VG
 void ConvertVGData_12_1(char* inputBuf, const std::string& filePath, const std::string& pathOut);
+void ConvertVGData_Rev3(char* inputBuf, const std::string& filePath, const std::string& pathOut);
+
+// RMDL v14/v15 conversion
+void ConvertRMDL140To10(char* pMDL, const std::string& pathIn, const std::string& pathOut);
+void ConvertRMDL150To10(char* pMDL, const std::string& pathIn, const std::string& pathOut);
 
 // deprecated
 //void CreateVGFile_v8(const std::string& filePath);

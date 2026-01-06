@@ -172,6 +172,9 @@
     <ClCompile Include="studio\model\mdl_53.cpp" />
     <ClCompile Include="studio\model\rmdl_120.cpp" />
     <ClCompile Include="studio\model\rmdl_121.cpp" />
+    <ClCompile Include="studio\model\rmdl_140.cpp" />
+    <ClCompile Include="studio\model\rmdl_160.cpp" />
+    <ClCompile Include="studio\model\rmdl_191.cpp" />
     <ClCompile Include="studio\model\rmdl_8.cpp" />
     <ClCompile Include="studio\seq\rseq_71.cpp" />
     <ClCompile Include="studio\seq\rseq_v10.cpp" />
@@ -196,6 +199,8 @@
     <ClInclude Include="studio\common.h" />
     <ClInclude Include="studio\optimize.h" />
     <ClInclude Include="studio\studio.h" />
+    <ClInclude Include="studio\studio_r5_v16.h" />
+    <ClInclude Include="studio\studio_r5_v19.h" />
     <ClInclude Include="studio\versions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

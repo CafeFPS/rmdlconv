@@ -11,29 +11,46 @@ OR
 
 ---
 ### supported versions
-main versions:
+
+**MDL conversions:**
 - Portal 2 (v49) -> Apex Legends Season 3 (v54 - rmdl v10)
 - Titanfall 2 (v53) -> Apex Legends Season 3 (v54 - rmdl v10)
+- Titanfall (v52) -> Titanfall 2 (v53) *(partial)*
 
-partially supported:
-- Titanfall (v52) -> Titanfall 2 (v53)
+**RMDL conversions (downgrade to v10 for R5Reloaded/R5Valkyrie):**
+| Version | Flag | Seasons |
+|---------|------|---------|
+| v8 | `-v8` | S0-1 |
+| v12.1 | `-v121` | S7-8 |
+| v12.2 | `-v122` | S9-11 |
+| v13 | `-v13` | S12 |
+| v14 | `-v14` | S13 |
+| v14.1 | `-v141` | S14 |
+| v15 | `-v15` | S15 |
+| v16 | `-v16` | S16-17 |
+| v17 | `-v17` | S17-18 |
+| v18 | `-v18` | S18 |
+| v19 | `-v19` | S19 |
+| v19.1 | `-v191` | S19+ |
 
-unsupported but planned:
-- Portal 2 (v49) -> Titanfall 2 (v53)
-- Titanfall (v52) -> Apex Legends Season 3 (v54 - rmdl v10)
 
+### batch conversion (recommended for RMDL)
+Convert entire folders of models with a single command:
+```
+rmdlconv.exe -v<version> <input_folder> [output_folder]
+```
+
+Examples:
+```bash
+rmdlconv.exe -v16 C:\models\season17          # Output to C:\models\season19_rmdlconv_out
+rmdlconv.exe -v122 C:\s11_models C:\converted  # Custom output folder
+```
 
 ### supported commands
-- "-nopause": automatically close console after running
-- "-convertmodel": path to model(s) you wish to convert
-  examples: "-convertmodel C:\Among\us.mdl" "-convertmodel C:\Among"
-- "-targetversion": version you would like models to be upgraded to
-  examples: "-targetversion 53" "-targetversion 54"
-- "-outputdir": custom directory for files to be output into
-  examples: "-outputdir E:\SuS"
-- "-convertsequence": unfinished
+- `-v<version>`: batch convert folder (see version table above)
+- `-convertmodel <path> -sourceversion <ver>`: convert single model
+- `-outputdir <path>`: custom output directory
+- `-nopause`: automatically close console after running
 
 ### known issues
 animation conversion is not currently supported and there may be various issues when using models in game
-
-converted models will almost definitely **not work** in R5Reloaded if they only contain 1 bone, as the game deals with them differently
