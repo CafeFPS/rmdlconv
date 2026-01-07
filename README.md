@@ -1,14 +1,5 @@
 # rmdlconv
 copyright (c) 2022, rexx
-
-## instructions
-1. drag and drop .mdl file on rmdlconv.exe
-
-OR
-
-1. make a batch file with one or more of the supported commands.
-2. run the batch file.
-
 ---
 ### supported versions
 
