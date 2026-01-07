@@ -3,22 +3,22 @@ copyright (c) 2022, rexx
 ---
 ### supported versions
 
-**MDL conversions:**
+**model format conversions:**
 - Portal 2 (v49) -> Apex Legends Season 3 (v54 - rmdl v10)
 - Titanfall 2 (v53) -> Apex Legends Season 3 (v54 - rmdl v10)
 - Titanfall (v52) -> Titanfall 2 (v53) *(partial)*
+- Apex Legends (v54 all subversions) -> Apex Legends Season 3 (v54 - rmdl v10):
 
-**RMDL conversions (downgrade to v10 for R5Reloaded/R5Valkyrie):**
 | Version | Flag | Seasons |
 |---------|------|---------|
 | v8 | `-v8` | S0-1 |
 | v12.1 | `-v121` | S7-8 |
-| v12.2 | `-v122` | S9-11 |
+| v12.5 | `-v122` | S11 |
 | v13 | `-v13` | S12 |
 | v14 | `-v14` | S13 |
-| v14.1 | `-v141` | S14 |
-| v15 | `-v15` | S15 |
-| v16 | `-v16` | S16-17 |
+| v14.1 | `-v141` | S15 |
+| v15 | `-v15` | S16 |
+| v16 | `-v16` | S15 |
 | v17 | `-v17` | S17-18 |
 | v18 | `-v18` | S22 |
 | v19 | `-v19` | S26 |
