@@ -33,7 +33,7 @@ rmdlconv.exe -v<version> <input_folder> [output_folder]
 
 Examples:
 ```bash
-rmdlconv.exe -v16 C:\models\season17          # Output to C:\models\season19_rmdlconv_out
+rmdlconv.exe -v16 C:\models\season17          # Output to C:\models\season17_rmdlconv_out
 rmdlconv.exe -v122 C:\s11_models C:\converted  # Custom output folder
 ```
 
