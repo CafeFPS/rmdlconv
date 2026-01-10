@@ -1053,6 +1053,8 @@ static void ConvertTextures_160(const r5::v160::studiohdr_t* pOldHdr, const char
 
 //
 // ConvertSkins_160
+// V16 uses uint16_t offsets with no alignment; V10 uses int offsets with ALIGN4
+//
 static void ConvertSkins_160(const r5::v160::studiohdr_t* pOldHdr, const char* pOldData, int numSkinRef, int numSkinFamilies)
 {
 	printf("converting %i skins (%i skinrefs)...\n", numSkinFamilies, numSkinRef);
@@ -1061,21 +1063,30 @@ static void ConvertSkins_160(const r5::v160::studiohdr_t* pOldHdr, const char* p
 
 	const char* pOldSkinData = (const char*)pOldHdr + FIX_OFFSET(pOldHdr->skinindex);
 
-	// Copy skin index data
-	int skinIndexDataSize = sizeof(short) * numSkinRef * numSkinFamilies;
+	const int skinIndexDataSize = sizeof(short) * numSkinRef * numSkinFamilies;
 	memcpy(g_model.pData, pOldSkinData, skinIndexDataSize);
-
 	g_model.pData += skinIndexDataSize;
 
 	ALIGN4(g_model.pData);
 
-	// Write skin group names (skin 0 is "default" and has no name entry)
-	// v10 expects (numSkinFamilies - 1) int offsets pointing to string names
+	// V16 stores skin name offsets as uint16_t immediately after skin data (no alignment)
+	const uint16_t* pOldSkinNameOffsets = reinterpret_cast<const uint16_t*>(pOldSkinData + skinIndexDataSize);
+
 	for (int i = 0; i < numSkinFamilies - 1; ++i)
 	{
-		char* skinNameBuf = new char[32];
-		sprintf_s(skinNameBuf, 32, "skin%i", i + 1);
-		AddToStringTable(g_model.pBase, (int*)g_model.pData, skinNameBuf);
+		const uint16_t nameOffset = pOldSkinNameOffsets[i];
+		const char* skinName = (const char*)pOldHdr + FIX_OFFSET(nameOffset);
+
+		if (nameOffset > 0 && skinName[0] != '\0' && strlen(skinName) < 256)
+		{
+			AddToStringTable(g_model.pBase, (int*)g_model.pData, skinName);
+		}
+		else
+		{
+			char skinNameBuf[32];
+			sprintf_s(skinNameBuf, 32, "skin%d", i + 1);
+			AddToStringTable(g_model.pBase, (int*)g_model.pData, skinNameBuf);
+		}
 		g_model.pData += sizeof(int);
 	}
 
