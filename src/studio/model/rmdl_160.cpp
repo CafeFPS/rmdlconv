@@ -660,6 +660,12 @@ static void ConvertStudioHdr_160(r5::v8::studiohdr_t* out, const r5::v160::studi
 	out->vvcSize = 0;
 	out->vvwSize = 0;
 	out->phySize = 0;  // Will be set later if .phy file exists
+
+	out->surfacepropLookup = static_cast<int>(hdr->surfacepropLookup);
+
+	// v8 BVH collision-detail sentinel pair (-1/-1); zero is misread as a valid LOD.
+	out->unk4_v54[0] = -1;
+	out->unk4_v54[1] = -1;
 }
 
 //
@@ -2392,40 +2398,28 @@ void ConvertRMDL160To10(char* pMDL, const size_t fileSize, const std::string& pa
 		phyIfs.read(phyInputBuf, phyInputSize);
 		phyIfs.close();
 
-		// V16 PHY format has a compact 4-byte header (same as v19.1):
-		//   [0-1]: version (uint16) = 1
-		//   [2-3]: keyValuesOffset (uint16) - offset to text data
-		//
-		// V10 PHY format has a 20-byte IVPS header:
-		//   [0-3]: size (int32) = 20
-		//   [4-7]: id (int32) = 1
-		//   [8-11]: solidCount (int32) = 1
-		//   [12-15]: checkSum (int32) = model checksum
-		//   [16-19]: keyValuesOffset (int32) = v16_offset + 16
-		//
-		// Data after header is identical, just offset by 16 bytes
-
-		// Read v16 header
-		uint16_t v16Version = *reinterpret_cast<uint16_t*>(phyInputBuf);
+		// v16/v17 PHY header is 4 bytes: [solidCount: uint16][keyValuesOffset: uint16].
+		// v10 IVPS header is 20 bytes: size, id, solidCount, checkSum, keyValuesOffset (all int32).
+		// Data after the header is identical, just shifted by 16 bytes.
+		uint16_t v16SolidCount = *reinterpret_cast<uint16_t*>(phyInputBuf);
 		uint16_t v16KeyValuesOffset = *reinterpret_cast<uint16_t*>(phyInputBuf + 2);
 
-		printf("  V16 PHY: version=%d, keyValuesOffset=%d\n", v16Version, v16KeyValuesOffset);
+		printf("  V16 PHY: solidCount=%d, keyValuesOffset=%d\n", v16SolidCount, v16KeyValuesOffset);
 
-		// Create v10 IVPS header
 		struct IVPSHeader {
-			int32_t size;           // 20
-			int32_t id;             // 1
-			int32_t solidCount;     // 1
-			int32_t checkSum;       // model checksum
-			int32_t keyValuesOffset; // v16_offset + 16
+			int32_t size;
+			int32_t id;
+			int32_t solidCount;
+			int32_t checkSum;
+			int32_t keyValuesOffset;
 		};
 
 		IVPSHeader v10Header;
 		v10Header.size = 20;
 		v10Header.id = 1;
-		v10Header.solidCount = 1;
-		v10Header.checkSum = oldHeader->checksum;  // Use model's checksum
-		v10Header.keyValuesOffset = v16KeyValuesOffset + 16;  // Adjust for header size difference
+		v10Header.solidCount = v16SolidCount;
+		v10Header.checkSum = oldHeader->checksum;
+		v10Header.keyValuesOffset = v16KeyValuesOffset + 16;
 
 		printf("  V10 PHY: size=%d, id=%d, solidCount=%d, checkSum=0x%08X, keyValuesOffset=%d\n",
 			v10Header.size, v10Header.id, v10Header.solidCount, v10Header.checkSum, v10Header.keyValuesOffset);

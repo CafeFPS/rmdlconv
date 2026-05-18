@@ -161,6 +161,15 @@ void UpgradeStudioModelTo54(std::string& modelPath, const char* outputDir)
 
 		int studioVersion = GetStudioVersionFromBuffer(pMDL.get());
 
+		// v16+ dropped the 'IDST' magic; first 4 bytes are flags. Default to v17
+		// (S21 baseline); explicit -v16/-v18/-v19/-v191 batch flags override.
+		if (studioVersion == -1 && fileSize >= 0xE0)
+		{
+			printf("No IDST magic in '%s'; dispatching as v17.\n", path.c_str());
+			ConvertRMDL160To10(pMDL.get(), fileSize, path, pathOut, 17);
+			continue;
+		}
+
 		switch (studioVersion)
 		{
 		case MdlVersion::GARRYSMOD:
@@ -176,22 +185,14 @@ void UpgradeStudioModelTo54(std::string& modelPath, const char* outputDir)
 			ConvertMDL53To54(pMDL.get(), path, pathOut);
 			break;
 		case MdlVersion::APEXLEGENDS:
-		{
-			// For Apex Legends models, we need to determine the subversion
-			// Currently defaults to v12.1, but can be extended for v19.1+ support
-			// Detection is difficult, so we rely on user input or file size heuristics
-
-			// Check if it could be v19.1 based on file size/structure
-			// v19.1 uses 2-byte packing so headers are significantly smaller
-			// For now, default to v12.1 conversion
-			// Users can use legacy handling with -version 19.1 for v19.1 models
-
-			// TODO: Add proper subversion detection or command-line override
+			// v8-v12.5 share studio version 54. v12.1 is the sensible default for the
+			// legacy single-file path; explicit -v8/-v121/-v122/-v124/-v125 batch flags
+			// in main.cpp give better fidelity.
 			ConvertRMDL121To10(pMDL.get(), path, pathOut);
 			break;
-		}
 		default:
-			printf("Model '%s' has an unsupported version, skipping...\n", path.c_str());
+			printf("Model '%s' has an unsupported version (%d), skipping...\n",
+				path.c_str(), studioVersion);
 			break;
 		}
 
